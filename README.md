@@ -20,26 +20,29 @@ Java Class sample:
     @ActiveProfilesPropertyConfiguration(values= {"classpath:active-profiles.properties"},codepage="UTF-8")
     public class TestStarter  implements CommandLineRunner {
 
+    @Value("${URL}")
+    private String url;
+
 Properties file sample for combination active profiles: local, dev, st, sigma, alpha.
 
-    #[local,alpha]:
+    #[local,alpha]
       URL=local-alpha
 
-    #[local,sigma]:
+    #[local,sigma]
       URL=local-sigma
 
-    #[st,alpha]:
+    #[st,alpha]
       URL=st-alpha
 
-    #[st,sigma]:
+    #[st,sigma]
       URL=st-sigma
 
-    #[local]:
+    #[local]
       URL=local
       STEND=local
       SERVICE_ID=SE000123l
 
-    #[st]:
+    #[st]
       STEND=st
       SERVICE_ID=SE000123s
 
