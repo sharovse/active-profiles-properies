@@ -32,7 +32,7 @@ public class ActiveProfilesPropertyPostProcessor implements BeanPostProcessor {
 		int i = 0;
 		for (String resources : annotation.values()) {
 			try {
-				environment.getPropertySources().addLast(
+				environment.getPropertySources().addFirst(
 						new ActiveProfilesPropertySource(
 								PREFIX+beanName+(++i),
 								environment.getActiveProfiles(),

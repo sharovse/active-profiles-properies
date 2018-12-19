@@ -30,9 +30,9 @@ public class ActiveProfilesPropertySource extends PropertySource<String> {
 	static final Object PROFILE_DELIMETER = ",";
 	Map<String, Map<String, String>> map;
 	String[] profiles;
-	String allProfiles;
+	String allProfiles = ActiveProfilesPropertyUtils.NONE_SECTION;
 
-	class StringValue {
+	public static class StringValue {
 		String value;
 	}
 
@@ -45,11 +45,11 @@ public class ActiveProfilesPropertySource extends PropertySource<String> {
 		return value.value;
 	}
 
-	private void setIfExistStringValue(StringValue value, String profile, String nameVar) {
+	void setIfExistStringValue(StringValue value, String profile, String nameVar) {
 		if (map.containsKey(profile)) {
 			Map<String, String> v = map.get(profile);
 			if (v != null && v.containsKey(nameVar)) {
-				value.value = v.get(name);
+				value.value = v.get(nameVar);
 			}
 		}
 	}
@@ -58,12 +58,15 @@ public class ActiveProfilesPropertySource extends PropertySource<String> {
 		super(name);
 		this.map = map;
 		this.profiles = profiles;
-		StringBuilder sb = new StringBuilder();
-		for (String p : profiles) {
-			if (!p.isEmpty()) {
-				sb.append(PROFILE_DELIMETER);
+		if(profiles!=null){
+			StringBuilder sb = new StringBuilder();
+			for (String p : profiles) {
+				if (sb.length()>0) {
+					sb.append(PROFILE_DELIMETER);
+				}
+				sb.append(p);
 			}
-			sb.append(p);
+			this.allProfiles = sb.toString();
 		}
 	}
 

@@ -17,6 +17,7 @@ public class ActiveProfilesPropertyUtils {
 	static final String VAR_DELIMETER = "=";
 	static final String VAR_COMMENT = "#";
 	static final String CLASSPATH_PREFIX = "classpath:";
+	static final String NONE_SECTION = "";
 	
 	Map<String, Map<String, String>> readVars(ClassLoader loader, String resurce, String codepage) throws IOException{
 		Map<String, Map<String, String>> map = new HashMap<>();
@@ -25,7 +26,7 @@ public class ActiveProfilesPropertyUtils {
 			return map;  
 	    
 		String []lines = body.split(LINE_REGEXP);
-		String currendSection = "";
+		String currendSection = NONE_SECTION;
 		for (String line : lines) {
 			final String section = getSection(line);
 			if(section!=null) {
@@ -37,7 +38,14 @@ public class ActiveProfilesPropertyUtils {
 		return map;
 	}
 	
+	boolean isEmpty(String value){
+		return (value==null || value.trim().equals(""));
+	}
+	
 	void addVar(Map<String, Map<String, String>> map, String currendSection, String line) {
+		if(isEmpty(line)){
+			return;
+		}
 		final Map<String, String> vars;
 		if(!map.containsKey(currendSection)) {
 			vars = new HashMap<>();
@@ -49,13 +57,13 @@ public class ActiveProfilesPropertyUtils {
 	}
 
 	void addLine(Map<String, String> vars, String line) {
-		if(line==null) return;
+		if(isEmpty(line)) return;
 		if(line.contains(VAR_DELIMETER)) {
 			int pos = line.indexOf(VAR_DELIMETER);
 			final String var = line.substring(0, pos);
 			final String value = line.substring(pos+1).trim();
 			if(!value.startsWith(VAR_COMMENT)) {
-				vars.put(var, value);
+				vars.put(var.trim(), value);
 			}
 		}
 	}
