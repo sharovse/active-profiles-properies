@@ -40,7 +40,8 @@ public class ActiveProfilesPropertyPostProcessor implements BeanPostProcessor {
 										bean.getClass().getClassLoader(), 
 										resources, 
 										annotation.codepage()
-										)
+										),
+								annotation.activeProfilesInjectName()
 						)
 				);
 			} catch (IOException e) {

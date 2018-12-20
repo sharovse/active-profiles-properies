@@ -19,9 +19,13 @@ Java Class sample:
 
     @ActiveProfilesPropertyConfiguration(values= {"classpath:active-profiles.properties"},codepage="UTF-8")
     public class TestStarter  implements CommandLineRunner {
+	
+	@Value("${URL}")
+	private String url;
 
-    @Value("${URL}")
-    private String url;
+	@Value("${active-profiles}")
+	private String profiles;		
+
 
 Properties file sample for combination active profiles: local, dev, st, sigma, alpha.
 
@@ -53,13 +57,21 @@ Properties file sample for combination active profiles: local, dev, st, sigma, a
       VALUE_DB_READ_PROPERTY=file.txt
 
 Sample:
+
       mvn clean test -Dspring.profiles.active=local,alpha
+
 Variables:
- 
+
 	VALUE_DB_WRITE_PROPERTY=file.txt
 	STEND=local
 	SERVICE_ID=SE000123l
 	URL=local-alpha
+
+Class value variable:
+
+	url=local-alpha
+	profiles=local,alpha
+	
 
 Find value order:
    * Single profile.

@@ -6,19 +6,12 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import static ru.sharovse.spring.utils.db.properties.ActiveProfilesPropertyConstants.*;
 
 import org.apache.commons.io.FileUtils;
 
 public class ActiveProfilesPropertyUtils {
 
-	static final String LINE_REGEXP = "\n";
-	static final Pattern SECTION_REGEXP = Pattern.compile("#\\[(.*)\\]");
-	static final String VAR_DELIMETER = "=";
-	static final String VAR_COMMENT = "#";
-	static final String CLASSPATH_PREFIX = "classpath:";
-	static final String NONE_SECTION = "";
-	
 	Map<String, Map<String, String>> readVars(ClassLoader loader, String resurce, String codepage) throws IOException{
 		Map<String, Map<String, String>> map = new HashMap<>();
 		String body = readFile(loader, resurce, codepage);

@@ -1,6 +1,9 @@
 package ru.sharovse.spring.utils.db.properties;
 
 import static org.junit.Assert.*;
+
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +32,8 @@ public class ActiveProfilesPropertyTest {
 	@Value("${VALUE_DB_READ_PROPERTY:}")
 	String read;
 	
+	@Value("${"+ActiveProfilesPropertyConstants.DEFAULT_ACTIVE_PROFILES_INJECT_NAME+"}")
+	String profiles;
 	
 	@Test
 	public void testGetVars(){
@@ -37,6 +42,12 @@ public class ActiveProfilesPropertyTest {
 		assertEquals("local", stend);
 		assertEquals("file.txt", write);
 		assertEquals("", read);
+		
+		assertNotNull(profiles);
+		assertTrue(profiles.contains(MyActiveProfilesResolver.ALPHA));
+		assertTrue(profiles.contains(MyActiveProfilesResolver.LOCAL));
+
+		
 	}
 	
 }

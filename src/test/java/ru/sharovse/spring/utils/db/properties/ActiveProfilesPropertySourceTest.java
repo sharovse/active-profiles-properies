@@ -2,7 +2,10 @@ package ru.sharovse.spring.utils.db.properties;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -17,31 +20,32 @@ import ru.sharovse.spring.utils.db.properties.ActiveProfilesPropertySource.Strin
 public class ActiveProfilesPropertySourceTest {
 
 	ActiveProfilesPropertySource service;
-	
+
 	private String profile1 = "profile1";
 	private String profile2 = "profile2";
-	 
+
 	private String name = "name";
-	
+
 	private String varName = "varName";
 	private String varValue = "varValue";
-	
-	private String[] profiles = new String[]{ profile1, profile2 };
-	
+
+	private String[] profiles = new String[] { profile1, profile2 };
+
 	Map<String, Map<String, String>> mapSections;
 	Map<String, String> mapVars;
 
-	private String allProfiles = profile1+","+profile2;
-	
+	private String allProfiles = profile1 + "," + profile2;
+
 	@Before
 	public void setUp() throws Exception {
 		mapVars = new HashMap<>();
 		mapVars.put(varName, varValue);
-		
+
 		mapSections = new HashMap<>();
 		mapSections.put(profile1, mapVars);
-		
-		service = spy(new ActiveProfilesPropertySource(name, profiles, mapSections));
+
+		service = spy(new ActiveProfilesPropertySource(name, profiles, mapSections,
+				ActiveProfilesPropertyConstants.DEFAULT_ACTIVE_PROFILES_INJECT_NAME));
 	}
 
 	@Test
@@ -49,9 +53,8 @@ public class ActiveProfilesPropertySourceTest {
 		assertEquals(mapSections, service.map);
 		assertArrayEquals(profiles, service.profiles);
 		assertEquals(allProfiles, service.allProfiles);
-		
-		ActiveProfilesPropertySource s1 = new ActiveProfilesPropertySource(name, null, mapSections);
-		
+		new ActiveProfilesPropertySource(name, null, mapSections,
+				ActiveProfilesPropertyConstants.DEFAULT_ACTIVE_PROFILES_INJECT_NAME);
 	}
 
 	@Test
@@ -69,21 +72,21 @@ public class ActiveProfilesPropertySourceTest {
 	public void testContainsPropertyAndSetCachedContainVar() {
 		service.cache = new HashMap<>();
 		service.cache.put(varName, varValue);
-		assertTrue( service.containsPropertyAndSetCached(varName) );
+		assertTrue(service.containsPropertyAndSetCached(varName));
 	}
 
 	@Test
 	public void testContainsPropertyAndSetCachedTrue() {
 		service.cache = new HashMap<>();
 		doReturn(varValue).when(service).getValue(eq(varName));
-		assertTrue( service.containsPropertyAndSetCached(varName) );
+		assertTrue(service.containsPropertyAndSetCached(varName));
 	}
 
 	@Test
 	public void testContainsPropertyAndSetCachedFalse() {
 		service.cache = new HashMap<>();
 		doReturn(null).when(service).getValue(eq(varName));
-		assertFalse( service.containsPropertyAndSetCached(varName) );
+		assertFalse(service.containsPropertyAndSetCached(varName));
 	}
 
 	@Test
@@ -97,9 +100,10 @@ public class ActiveProfilesPropertySourceTest {
 	@Test
 	public void testContainsPropertyString() {
 		doReturn(false).when(service).containsPropertyAndSetCached(varName);
-		assertFalse( service.containsProperty(varName) );
+		assertFalse(service.containsProperty(varName));
 		doReturn(true).when(service).containsPropertyAndSetCached(varName);
-		assertTrue( service.containsProperty(varName) );
+		assertTrue(service.containsProperty(varName));
+		assertTrue(service.containsProperty(ActiveProfilesPropertyConstants.DEFAULT_ACTIVE_PROFILES_INJECT_NAME));
 	}
 
 	@Test
@@ -108,6 +112,8 @@ public class ActiveProfilesPropertySourceTest {
 		assertNull(service.getProperty(varName));
 		doReturn(varValue).when(service).getValue(eq(varName));
 		assertEquals(varValue, service.getProperty(varName));
+		assertEquals(profile1 + ActiveProfilesPropertyConstants.PROFILE_DELIMETER + profile2,
+				(String) service.getProperty(ActiveProfilesPropertyConstants.DEFAULT_ACTIVE_PROFILES_INJECT_NAME));
 	}
 
 	@Test

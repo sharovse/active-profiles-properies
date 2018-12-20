@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import static ru.sharovse.spring.utils.db.properties.ActiveProfilesPropertyConstants.*;
 
 public class ActiveProfilesPropertyUtilsTest {
 
@@ -20,17 +21,17 @@ public class ActiveProfilesPropertyUtilsTest {
 
 	String resurceUrl = "active-profiles.properties";
 	String resurceFile = "src/test/resources/active-profiles.properties";
-	String codepage = "utf-8";
+	String codepage = DEFAULT_CODEPAGE_PROPERTYES_FILE;
 	
 	@Test
 	public void testReadVars() throws IOException {
-		Map<String, Map<String, String>> da = service.readVars(this.getClass().getClassLoader(), ActiveProfilesPropertyUtils.CLASSPATH_PREFIX+resurceUrl, codepage);
+		Map<String, Map<String, String>> da = service.readVars(this.getClass().getClassLoader(), CLASSPATH_PREFIX+resurceUrl, codepage);
 		assertTrue(da.size()==8);
 	}
 
 	String value = "value";
 	String name = "name";
-	String line = name +ActiveProfilesPropertyUtils.VAR_DELIMETER+value;
+	String line = name +VAR_DELIMETER+value;
 
 	@Test
 	public void testAddLine() {
@@ -68,7 +69,7 @@ public class ActiveProfilesPropertyUtilsTest {
 
 	@Test
 	public void testReadFile() throws IOException {
-		assertNotNull(service.readFile(this.getClass().getClassLoader(), ActiveProfilesPropertyUtils.CLASSPATH_PREFIX + resurceUrl, codepage) );
+		assertNotNull(service.readFile(this.getClass().getClassLoader(), CLASSPATH_PREFIX + resurceUrl, codepage) );
 	}
 
 	

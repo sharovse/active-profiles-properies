@@ -1,11 +1,13 @@
 package ru.sharovse.spring.utils.db.properties;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.core.env.PropertySource;
-
-/**
+import static ru.sharovse.spring.utils.db.properties.ActiveProfilesPropertyConstants.*
+;/**
  * Property Source Active Propiles. Find value order:
  * <ol>
  * <li>Single profile</li>
@@ -27,11 +29,11 @@ public class ActiveProfilesPropertySource extends PropertySource<String> {
 		return super.hashCode();
 	}
 
-	static final Object PROFILE_DELIMETER = ",";
 	Map<String, Map<String, String>> map;
 	String[] profiles;
-	String allProfiles = ActiveProfilesPropertyUtils.NONE_SECTION;
-
+	String allProfiles = NONE_SECTION;
+	String activePropertiesVarName;
+	
 	public static class StringValue {
 		String value;
 	}
@@ -54,10 +56,11 @@ public class ActiveProfilesPropertySource extends PropertySource<String> {
 		}
 	}
 
-	public ActiveProfilesPropertySource(String name, String[] profiles, Map<String, Map<String, String>> map) {
+	public ActiveProfilesPropertySource(String name, String[] profiles, Map<String, Map<String, String>> map, String activePropertiesVarName) {
 		super(name);
 		this.map = map;
 		this.profiles = profiles;
+		this.activePropertiesVarName = activePropertiesVarName;
 		if(profiles!=null){
 			StringBuilder sb = new StringBuilder();
 			for (String p : profiles) {
@@ -89,12 +92,21 @@ public class ActiveProfilesPropertySource extends PropertySource<String> {
 
 	@Override
 	public boolean containsProperty(String nameVar) {
-		return containsPropertyAndSetCached(nameVar);
+		if(activePropertiesVarName.equals(nameVar)){ 
+			return true;
+		}else{ 
+			return containsPropertyAndSetCached(nameVar);
+		}
 	}
 
 	@Override
 	public Object getProperty(String nameVar) {
-		return getValue(nameVar);
+		if(activePropertiesVarName.equals(nameVar)){
+			return allProfiles;
+		}else{
+			return getValue(nameVar);
+		}
+		
 	}
 
 }

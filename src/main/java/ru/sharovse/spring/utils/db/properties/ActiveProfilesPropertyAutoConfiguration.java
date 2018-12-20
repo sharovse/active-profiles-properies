@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ActiveProfilesPropertyAutoConfiguration {
+	
 	@Bean
 	public ActiveProfilesPropertyPostProcessor createValueDbAnnotationBeanPostProcessor() {
 		return new ActiveProfilesPropertyPostProcessor();
